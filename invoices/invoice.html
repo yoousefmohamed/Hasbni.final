@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>فاتورة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cairo', 'Courier New', monospace;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      color: #000 !important;
+    }
+
+    /* ===== الفاتورة الرئيسية - بحجم ورقة A4 تمامًا ===== */
+    .receipt {
+      background: #fff;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 20mm 18mm;
+      font-size: 15px;
+      color: #000 !important;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+      position: relative;
+      border: 1px solid #ddd;
+    }
+
+    /* جميع النصوص سوداء */
+    .receipt * {
+      color: #000 !important;
+    }
+
+    /* الهيدر */
+    .header {
+      text-align: center;
+      padding-bottom: 14px;
+      border-bottom: 3px solid #000;
+      margin-bottom: 14px;
+    }
+    .store-logo {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+      color: #000 !important;
+    }
+    .store-sub {
+      font-size: 14px;
+      color: #000 !important;
+      line-height: 1.8;
+      font-weight: 700;
+    }
+
+    /* معلومات الفاتورة */
+    .meta-section {
+      margin: 12px 0;
+      border-bottom: 2px solid #000;
+      padding-bottom: 12px;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      line-height: 2.2;
+      color: #000 !important;
+    }
+    .meta-row .label {
+      color: #000 !important;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .meta-row .value {
+      font-weight: 900;
+      font-size: 15px;
+      color: #000 !important;
+    }
+
+    /* شارة نوع الطلب */
+    .order-type-badge {
+      display: inline-block;
+      border: 2px solid #000;
+      border-radius: 5px;
+      padding: 3px 18px;
+      font-size: 14px;
+      font-weight: 900;
+      margin: 8px 0;
+      color: #000 !important;
+    }
+
+    /* الجدول */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+    }
+    .items-table thead tr {
+      border-bottom: 3px solid #000;
+      border-top: 3px solid #000;
+    }
+    .items-table thead th {
+      font-size: 14px;
+      font-weight: 900;
+      padding: 8px 6px;
+      text-align: right;
+      color: #000 !important;
+      background: #f5f5f5;
+    }
+    .items-table thead th:last-child { text-align: left; }
+    .items-table thead th:nth-child(2),
+    .items-table thead th:nth-child(3) { text-align: center; }
+
+    .items-table tbody tr { border-bottom: 1px solid #888; }
+    .items-table tbody tr:last-child { border-bottom: 2px solid #000; }
+    .items-table tbody td {
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 6px;
+      vertical-align: top;
+      color: #000 !important;
+    }
+    .items-table tbody td:last-child { text-align: left; font-weight: 900; }
+    .items-table tbody td:nth-child(2),
+    .items-table tbody td:nth-child(3) { text-align: center; }
+    .item-name { max-width: 200px; word-break: break-word; }
+
+    /* الإجماليات */
+    .totals {
+      border-top: 2px solid #000;
+      margin-top: 10px;
+      padding-top: 10px;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 5px 0;
+      color: #000 !important;
+    }
+    .total-row.grand {
+      font-size: 22px;
+      font-weight: 900;
+      border-top: 3px solid #000;
+      border-bottom: 3px solid #000;
+      margin-top: 10px;
+      padding: 12px 0;
+      color: #000 !important;
+    }
+
+    .divider { border: none; border-top: 1px dashed #555; margin: 10px 0; }
+    .divider-solid { border: none; border-top: 2px solid #000; margin: 10px 0; }
+
+    /* الفوتر */
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #000 !important;
+      line-height: 2;
+      border-top: 2px solid #000;
+      padding-top: 14px;
+    }
+    .footer .thanks {
+      font-size: 18px;
+      font-weight: 900;
+      color: #000 !important;
+    }
+    .powered {
+      font-size: 12px;
+      color: #000 !important;
+      margin-top: 6px;
+    }
+
+    /* زر الطباعة */
+    .print-btn {
+      display: block;
+      width: 210mm;
+      margin-top: 16px;
+      padding: 12px;
+      background: #000;
+      color: #fff !important;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .print-btn:hover { background: #333; }
+
+    /* مربع الإجمالي الكبير */
+    .grand-box {
+      background: #f0f0f0;
+      border: 3px solid #000;
+      border-radius: 8px;
+      text-align: center;
+      padding: 12px;
+      margin: 14px 0;
+    }
+    .grand-box .grand-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #000 !important;
+    }
+    .grand-box .grand-amount {
+      font-size: 36px;
+      font-weight: 900;
+      color: #000 !important;
+    }
+
+    @media print {
+      @page { size: A4; margin: 0; }
+      body { background: none; padding: 0; margin: 0; }
+      .receipt {
+        box-shadow: none;
+        width: 100%;
+        min-height: 100vh;
+        border: none;
+        padding: 15mm 14mm;
+      }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="receipt">
+    <!-- هيدر المتجر -->
+    <div class="header">
+      <div class="store-logo" id="store-name">حاسبني</div>
+      <div class="store-sub" id="store-address"></div>
+      <div class="store-sub" id="store-contact"></div>
+    </div>
+
+    <!-- معلومات الفاتورة -->
+    <div class="meta-section">
+      <div class="meta-row">
+        <span class="label">رقم الفاتورة:</span>
+        <span class="value" id="inv-number">—</span>
+      </div>
+      <div class="meta-row">
+        <span class="label">التاريخ:</span>
+        <span class="value" id="inv-date">—</span>
+      </div>
+      <div class="meta-row">
+        <span class="label">الوقت:</span>
+        <span class="value" id="inv-time">—</span>
+      </div>
+      <div class="meta-row">
+        <span class="label">الكاشير:</span>
+        <span class="value" id="inv-cashier">—</span>
+      </div>
+      <div class="meta-row" id="customer-row" style="display:none">
+        <span class="label">العميل:</span>
+        <span class="value" id="inv-customer">—</span>
+      </div>
+    </div>
+
+    <!-- نوع الطلب وطريقة الدفع -->
+    <div style="text-align:center;margin:8px 0">
+      <span class="order-type-badge" id="inv-payment">نقدي</span>
+      &nbsp;&nbsp;
+      <span class="order-type-badge" id="inv-order-type">استلام</span>
+    </div>
+
+    <hr class="divider-solid">
+
+    <!-- جدول الأصناف -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>الصنف</th>
+          <th>الكمية</th>
+          <th>السعر</th>
+          <th>الإجمالي</th>
+        </tr>
+      </thead>
+      <tbody id="inv-items">
+      </tbody>
+    </table>
+
+    <!-- الإجماليات -->
+    <div class="totals">
+      <div class="total-row" id="subtotal-row">
+        <span>المجموع الفرعي</span>
+        <span id="inv-subtotal">0.00</span>
+      </div>
+      <div class="total-row" id="discount-row" style="display:none">
+        <span>الخصم</span>
+        <span id="inv-discount">0.00</span>
+      </div>
+      <div class="total-row" id="tax-row" style="display:none">
+        <span>الضريبة</span>
+        <span id="inv-tax">0.00</span>
+      </div>
+    </div>
+
+    <!-- مربع الإجمالي الكبير -->
+    <div class="grand-box">
+      <div class="grand-label">الإجمالي المطلوب</div>
+      <div class="grand-amount" id="inv-total">0.00 جنيه</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- الفوتر -->
+    <div class="footer">
+      <div class="thanks" id="inv-notes">شكراً لزيارتكم ❤️</div>
+      <div style="margin-top:6px;font-weight:700" id="store-phone"></div>
+      <div class="powered">حاسبني — نظام المحاسبة المتكامل</div>
+    </div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ طباعة الفاتورة</button>
+
+  <script>
+    function fillInvoice(data) {
+      const now = new Date();
+
+      // بيانات المتجر
+      if (data.store) {
+        document.getElementById('store-name').textContent = data.store.name || 'حاسبني';
+        if (data.store.address) document.getElementById('store-address').textContent = data.store.address;
+        if (data.store.phone) {
+          document.getElementById('store-contact').textContent = '📞 ' + data.store.phone;
+          document.getElementById('store-phone').textContent = data.store.phone;
+        }
+      }
+
+      // رقم الفاتورة
+      document.getElementById('inv-number').textContent = data.invoice_number || data.id || '—';
+
+      // التاريخ والوقت
+      const dateObj = data.ts ? new Date(data.ts) : now;
+      document.getElementById('inv-date').textContent = data.date || dateObj.toLocaleDateString('ar-EG');
+      document.getElementById('inv-time').textContent = dateObj.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      document.getElementById('inv-cashier').textContent = data.cashier || data.user || '—';
+
+      // العميل
+      if (data.customer && data.customer !== 'نقدي') {
+        document.getElementById('customer-row').style.display = '';
+        document.getElementById('inv-customer').textContent = data.customer;
+      }
+
+      // طريقة الدفع ونوع الطلب
+      document.getElementById('inv-payment').textContent = data.payment || 'نقدي';
+      document.getElementById('inv-order-type').textContent = data.orderType || 'استلام';
+
+      // العناصر
+      const tbody = document.getElementById('inv-items');
+      tbody.innerHTML = '';
+      (data.items || []).forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        const qty = parseInt(item.qty) || 1;
+        const subtotal = parseFloat(item.subtotal) || (price * qty);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="item-name">${item.name || ''}</td>
+          <td>${qty}</td>
+          <td>${price.toFixed(2)}</td>
+          <td>${subtotal.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // الإجماليات
+      const subtotal = parseFloat(data.subtotal) || 0;
+      const discount = parseFloat(data.discount) || 0;
+      const tax = parseFloat(data.tax) || 0;
+      const total = parseFloat(data.total) || 0;
+      const currency = data.currency || 'جنيه';
+
+      document.getElementById('inv-subtotal').textContent = subtotal.toFixed(2) + ' ' + currency;
+      document.getElementById('inv-total').textContent = total.toFixed(2) + ' ' + currency;
+
+      if (discount > 0) {
+        document.getElementById('discount-row').style.display = '';
+        document.getElementById('inv-discount').textContent = '- ' + discount.toFixed(2) + ' ' + currency;
+      }
+      if (tax > 0) {
+        document.getElementById('tax-row').style.display = '';
+        document.getElementById('inv-tax').textContent = tax.toFixed(2) + ' ' + currency;
+      }
+
+      // الملاحظات
+      if (data.notes || data.invoiceNotes) {
+        document.getElementById('inv-notes').textContent = data.invoiceNotes || data.notes || 'شكراً لزيارتكم ❤️';
+      }
+
+      // طباعة تلقائية
+      if (data.autoPrint) {
+        setTimeout(() => window.print(), 400);
+      }
+    }
+
+    window.fillInvoice = fillInvoice;
+
+    // قراءة البيانات من URL
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const raw = params.get('data');
+        if (raw) {
+          const data = JSON.parse(decodeURIComponent(raw));
+          fillInvoice(data);
+        }
+      } catch(e) {}
+    });
+  </script>
+</body>
+</html>

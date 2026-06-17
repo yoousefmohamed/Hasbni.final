@@ -1,0 +1,64 @@
+{
+  "name": "hassibni",
+  "version": "11.0.0",
+  "description": "نظام المحاسبة المتكامل حاسبني L99",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --maximized",
+    "start:dev": "electron . --inspect=9229",
+    "build": "electron-builder --win --x64",
+    "build:portable": "electron-builder --win portable --x64",
+    "build:all": "electron-builder --win --x64 --ia32",
+    "install-deps": "npm install --prefer-offline"
+  },
+  "dependencies": {
+    "electron": "^28.0.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.hassibni.accounting.l99",
+    "productName": "حاسبني",
+    "copyright": "Copyright © 2025 حاسبني L99",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!node_modules/.cache/**",
+      "!*.rar",
+      "!*.zip",
+      "!.git/**",
+      "!*.md",
+      "!js/app_backup.js",
+      "!js/app_improvements.patch"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerLanguages": ["ar"],
+      "language": "1025",
+      "shortcutName": "حاسبني L99",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "حاسبني-L99-محمول.exe"
+    },
+    "compression": "maximum",
+    "asar": true
+  }
+}
